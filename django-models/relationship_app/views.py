@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from .models import UserProfile
+from django.core.exceptions import PermissionDenied
 
 
 def list_books(request):
@@ -75,9 +76,13 @@ def is_member(user):
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
-@login_required
-@user_passes_test(is_librarian)
+
 def librarian_view(request):
+    # If the user is not a Librarian, raise PermissionDenied
+    if not is_librarian(request.user):
+        raise PermissionDenied
+    
+    # If the user is a Librarian, render the view
     return render(request, 'relationship_app/librarian_view.html')
 
 
