@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from .models import Library  
 from .models import Book
+from .views import list_books
 
 
 def list_books(request):
