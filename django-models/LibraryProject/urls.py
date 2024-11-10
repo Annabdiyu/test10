@@ -20,7 +20,6 @@ from relationship_app import views as relationship_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    '''path('books/', include('relationship_app.urls')),
-    path('', include('relationship_app.urls')), 
-    path('', relationship_views.home, name='home'),'''
+    path('list/',include('relationship_app.urls')),
+    path('detail/',include('relationship_app.urls')),
 ]
