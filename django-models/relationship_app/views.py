@@ -66,14 +66,13 @@ def logout_view(request):
 def is_admin(user):
     return user.userprofile.role == 'Admin'
 
-
 def is_librarian(user):
     return user.is_authenticated and user.userprofile.role == 'Librarian'
-
 
 def is_member(user):
     return user.userprofile.role == 'Member'
 
+@login_required
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
@@ -81,16 +80,13 @@ def admin_view(request):
 @login_required
 @user_passes_test(is_librarian)
 def librarian_view(request):
-    # Assuming the role is stored in a `profile` field or similar
-    if request.user.userprofile.role == 'Librarian':
-        return render(request, 'books/librarian.html')
-    else:
-        return HttpResponseForbidden("You are not authorized to view this page.")
+    return render(request, 'relationship_app/librarian_view.html')
 
-
-
+@login_required
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+
 def home(request):
     return render(request, 'relationship_app/home.html')
