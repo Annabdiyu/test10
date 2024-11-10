@@ -4,7 +4,6 @@ from django.views.generic.detail import DetailView
 from .models import Library  
 from .models import Book
 
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -14,6 +13,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from .models import UserProfile
 from django.core.exceptions import PermissionDenied
+
+from django.http import HttpResponseForbidden
+
 
 
 def list_books(request):
@@ -79,7 +81,20 @@ def admin_view(request):
 @login_required
 @user_passes_test(is_librarian)
 def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
+    # Check if the user is authenticated and has a UserProfile
+    if request.user.is_authenticated:
+        try:
+            user_profile = UserProfile.objects.get(user=request.user)
+            # Allow access only if the role is 'Librarian'
+            if user_profile.role == 'Librarian':
+                # Your view logic here
+                return render(request, 'relationship_app/librarian_view.html')
+            else:
+                return HttpResponseForbidden("You do not have permission to access this page.")
+        except UserProfile.DoesNotExist:
+            return HttpResponseForbidden("User profile not found.")
+    else:
+        return HttpResponseForbidden("You need to be logged in to access this page.")
 
 
 @user_passes_test(is_member)
