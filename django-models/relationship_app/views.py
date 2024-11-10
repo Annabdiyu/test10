@@ -85,3 +85,5 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+def home(request):
+    return render(request, 'relationship_app/home.html')
