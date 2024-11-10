@@ -28,13 +28,12 @@ class Librarian(models.Model):
     name = models.CharField(max_length=255)
     library = models.OneToOneField(Library,on_delete=models.CASCADE)
 class UserProfile(models.Model):
-    USER_CHOICES = [
-        ('Admin' , 'Admin'),
-        ('Librarian' , 'Librarian'),
-        ('Member' , 'Member'),
-    ]
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    role = models.CharField(max_length=15,choices=USER_CHOICES,default='MB')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=[('Admin', 'Admin'), ('Librarian', 'Librarian'), ('Member', 'Member')])
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+    
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
